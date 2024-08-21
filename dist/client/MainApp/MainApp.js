@@ -8,7 +8,7 @@ const WordList = await import('../files/words2.js').then(...importHandlers('Word
 function MainPage(props) {
     const pathTo = name => props.path + '.' + name
     const {Page, Data, Calculation, Timer, TextElement, Dialog, Button, Block, TextInput} = Elemento.components
-    const {Split, Range, Len, WithoutItems, If, Select, ListContains, ForEach, Gte, Eq, And, Not, Or, RandomFrom, Log, RandomListFrom, FlatList, Lowercase, Ceiling, Join} = Elemento.globalFunctions
+    const {Split, Range, Len, WithoutItems, If, Select, ListContains, ForEach, Gte, Eq, And, Not, Or, RandomFrom, Log, RandomListFrom, FlatList, Lowercase, Trim, Ceiling, Join} = Elemento.globalFunctions
     const {Set, Reset} = Elemento.appFunctions
     const _state = Elemento.useGetStore()
     const MaxGuesses = _state.setObject(pathTo('MaxGuesses'), new Data.State(stateProps(pathTo('MaxGuesses')).value(3).props))
@@ -93,7 +93,7 @@ function MainPage(props) {
         return GameTimer.Start()
     }), [Score, GameTimer, Status, StartNewRound]))
     const MakeGuess = _state.setObject(pathTo('MakeGuess'), React.useCallback(wrapFn(pathTo('MakeGuess'), 'calculation', () => {
-        Set(LatestGuess, Lowercase(YourGuess))
+        Set(LatestGuess, Lowercase(Trim(YourGuess)))
         return Set(NumberOfGuesses, NumberOfGuesses + 1)
     }), [LatestGuess, YourGuess, NumberOfGuesses]))
     const WordControls = _state.setObject(pathTo('WordControls'), new Block.State(stateProps(pathTo('WordControls')).props))

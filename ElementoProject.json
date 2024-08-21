@@ -362,7 +362,7 @@
               "properties": {
                 "action": true,
                 "calculation": {
-                  "expr": "Set(LatestGuess, Lowercase(YourGuess))\nSet(NumberOfGuesses, NumberOfGuesses + 1)"
+                  "expr": "Set(LatestGuess, Lowercase(Trim(YourGuess)))\nSet(NumberOfGuesses, NumberOfGuesses + 1)"
                 }
               },
               "kind": "Function"
