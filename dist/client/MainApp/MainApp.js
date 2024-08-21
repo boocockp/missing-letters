@@ -32,15 +32,16 @@ function MainPage(props) {
     const IsRoundFailed = _state.setObject(pathTo('IsRoundFailed'), new Calculation.State(stateProps(pathTo('IsRoundFailed')).value(And(Not(IsRoundWon), Or(ShownAllLetters, UsedAllGuesses))).props))
     const GameRunning = _state.setObject(pathTo('GameRunning'), new Calculation.State(stateProps(pathTo('GameRunning')).value(Or(Status == 'Playing', Status == 'Paused')).props))
     const IsRoundComplete = _state.setObject(pathTo('IsRoundComplete'), new Calculation.State(stateProps(pathTo('IsRoundComplete')).value(Or(IsRoundWon, IsRoundFailed, RoundSkipped, Not(GameRunning))).props))
-    const Points = _state.setObject(pathTo('Points'), React.useCallback(wrapFn(pathTo('Points'), 'calculation', (word) => {
+    const Points = _state.setObject(pathTo('Points'), React.useCallback(wrapFn(pathTo('Points'), 'calculation', (withNextGuess) => {
         let lettersGuessed = Len(RemainingPositions)
-        let penalties = (NumberOfGuesses - 1) * 2
+        let guessCount = NumberOfGuesses + (withNextGuess ? 1 : 0)
+        let penalties = (guessCount - 1) * 2
         let pointsFactor = If(GapsShown, 2, 4)
         let letterPoints = Math.round(Math.pow(lettersGuessed, 1.3) * pointsFactor) - penalties
         return Math.max(letterPoints, 0)
     }), [RemainingPositions, NumberOfGuesses, GapsShown]))
     const EndRound = _state.setObject(pathTo('EndRound'), React.useCallback(wrapFn(pathTo('EndRound'), 'calculation', () => {
-        return Set(Score, Score + Points())
+        return Set(Score, Score + Points(false))
     }), [Score, Points]))
     const WhenRoundComplete_whenTrueAction = React.useCallback(wrapFn(pathTo('WhenRoundComplete'), 'whenTrueAction', async () => {
         await EndRound()
@@ -199,15 +200,15 @@ Or Start Game to dive straight in!`).props),
     ),
         React.createElement(Block, elProps(pathTo('PlayPanel')).layout('vertical').show(Or(Status == 'Playing', Status == 'Ended')).styles(elProps(pathTo('PlayPanel.Styles')).width('100%').padding('0').props).props,
             React.createElement(TextElement, elProps(pathTo('WordLetters')).styles(elProps(pathTo('WordLetters.Styles')).fontSize('32').letterSpacing('0.2em').props).content(If(IsRoundComplete, Word, () => Join(LettersShown))).props),
-            React.createElement(Block, elProps(pathTo('WordStatus')).layout('horizontal').styles(elProps(pathTo('WordStatus.Styles')).justifyContent('space-between').width('20em').props).props,
-            React.createElement(TextElement, elProps(pathTo('PointsAvailable')).content(Points() + ' points').props),
+            React.createElement(Block, elProps(pathTo('WordStatus')).layout('horizontal').styles(elProps(pathTo('WordStatus.Styles')).justifyContent('space-between').width('20em').minHeight('1.5em').props).props,
+            React.createElement(TextElement, elProps(pathTo('PointsAvailable')).content(If(IsRoundComplete, ' ', () => Points(true) + ' points')).props),
             React.createElement(TextElement, elProps(pathTo('GuessesRemaining')).show(Not(IsRoundComplete)).content((MaxGuesses - NumberOfGuesses) + ' guesses left').props),
     ),
             React.createElement(Block, elProps(pathTo('GuessEntry')).layout('horizontal wrapped').props,
             React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').props).props),
             React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(Not(IsRoundComplete), Len(YourGuess) > 0)).action(Guess_action).props),
     ),
-            React.createElement(TextElement, elProps(pathTo('RoundWon')).show(IsRoundWon).content('Correct! ' + Points() + ' points added').props),
+            React.createElement(TextElement, elProps(pathTo('RoundWon')).show(IsRoundWon).content('Correct! ' + Points(false) + ' points added').props),
             React.createElement(TextElement, elProps(pathTo('RoundFailed')).show(IsRoundFailed).content('Sorry - ' + If(UsedAllGuesses, 'no more guesses', () => If(ShownAllLetters, 'all letters shown'))).props),
             React.createElement(TextElement, elProps(pathTo('RoundSkipped')).show(RoundSkipped).content('Skipped').props),
             React.createElement(Block, elProps(pathTo('WordControls')).layout('horizontal wrapped').props,
