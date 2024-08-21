@@ -107,8 +107,8 @@ function MainPage(props) {
         await Instructions.Close()
     }), [StartNewGame, Instructions])
     const Guess_action = React.useCallback(wrapFn(pathTo('Guess'), 'action', async () => {
-        await MakeGuess()
-    }), [MakeGuess])
+        If(Len(YourGuess) > 0, async () => await MakeGuess())
+    }), [YourGuess, MakeGuess])
     const ShowAnotherLetter_action = React.useCallback(wrapFn(pathTo('ShowAnotherLetter'), 'action', async () => {
         await ShowNewLetter()
     }), [ShowNewLetter])
@@ -173,8 +173,13 @@ Enter your guesses - up to three in the box and click the Guess button.  You can
 But guess what - guesses, showing letters and showing gaps all reduce the number of points you get for the word, so you need to decide whether to use those or just puzzle it out.
 
 
-Click Next Word when you complete or skip a word to get another one.
+Click Next Word after each word to get another one.
 
+
+<b>Tips</b>
+<ul>
+  <li>The words may be plural</li>
+</ul>
 
 You have 3 minutes to guess as many words as you can.`).props),
             React.createElement(Button, elProps(pathTo('StartGame2')).content('Start Game').appearance('filled').show(Not(GameRunning)).action(StartGame2_action).props),
@@ -200,7 +205,7 @@ Or Start Game to dive straight in!`).props),
     ),
             React.createElement(Block, elProps(pathTo('GuessEntry')).layout('horizontal wrapped').props,
             React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').props).props),
-            React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(Not(IsRoundComplete)).action(Guess_action).props),
+            React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(Not(IsRoundComplete), Len(YourGuess) > 0)).action(Guess_action).props),
     ),
             React.createElement(TextElement, elProps(pathTo('RoundWon')).show(IsRoundWon).content('Correct! ' + Points() + ' points added').props),
             React.createElement(TextElement, elProps(pathTo('RoundFailed')).show(IsRoundFailed).content('Sorry - ' + If(UsedAllGuesses, 'no more guesses', () => If(ShownAllLetters, 'all letters shown'))).props),
