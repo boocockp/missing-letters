@@ -32,6 +32,7 @@ function MainPage(props) {
     const IsRoundFailed = _state.setObject(pathTo('IsRoundFailed'), new Calculation.State(stateProps(pathTo('IsRoundFailed')).value(And(Not(IsRoundWon), Or(ShownAllLetters, UsedAllGuesses))).props))
     const GameRunning = _state.setObject(pathTo('GameRunning'), new Calculation.State(stateProps(pathTo('GameRunning')).value(Or(Status == 'Playing', Status == 'Paused')).props))
     const IsRoundComplete = _state.setObject(pathTo('IsRoundComplete'), new Calculation.State(stateProps(pathTo('IsRoundComplete')).value(Or(IsRoundWon, IsRoundFailed, RoundSkipped, Not(GameRunning))).props))
+    const RoundInPlay = _state.setObject(pathTo('RoundInPlay'), new Calculation.State(stateProps(pathTo('RoundInPlay')).value(Not(IsRoundComplete)).props))
     const Points = _state.setObject(pathTo('Points'), React.useCallback(wrapFn(pathTo('Points'), 'calculation', (withNextGuess) => {
         let lettersGuessed = Len(RemainingPositions)
         let guessCount = NumberOfGuesses + (withNextGuess ? 1 : 0)
@@ -161,6 +162,7 @@ function MainPage(props) {
         React.createElement(Calculation, elProps(pathTo('IsRoundFailed')).show(false).props),
         React.createElement(Calculation, elProps(pathTo('WhenRoundComplete')).show(false).props),
         React.createElement(Calculation, elProps(pathTo('IsRoundComplete')).show(false).props),
+        React.createElement(Calculation, elProps(pathTo('RoundInPlay')).show(false).props),
         React.createElement(Calculation, elProps(pathTo('GameRunning')).show(false).props),
         React.createElement(Timer, elProps(pathTo('GameTimer')).show(false).props),
         React.createElement(TextElement, elProps(pathTo('Title')).styles(elProps(pathTo('Title.Styles')).fontFamily('Chelsea Market').fontSize('28').color('#039a03').props).content('Mis_ing L_tters').props),
@@ -202,11 +204,11 @@ Or Start Game to dive straight in!`).props),
             React.createElement(TextElement, elProps(pathTo('WordLetters')).styles(elProps(pathTo('WordLetters.Styles')).fontSize('32').letterSpacing('0.2em').props).content(If(IsRoundComplete, Word, () => Join(LettersShown))).props),
             React.createElement(Block, elProps(pathTo('WordStatus')).layout('horizontal').styles(elProps(pathTo('WordStatus.Styles')).justifyContent('space-between').width('20em').minHeight('1.5em').props).props,
             React.createElement(TextElement, elProps(pathTo('PointsAvailable')).content(If(IsRoundComplete, ' ', () => Points(true) + ' points')).props),
-            React.createElement(TextElement, elProps(pathTo('GuessesRemaining')).show(Not(IsRoundComplete)).content((MaxGuesses - NumberOfGuesses) + ' guesses left').props),
+            React.createElement(TextElement, elProps(pathTo('GuessesRemaining')).show(RoundInPlay).content((MaxGuesses - NumberOfGuesses) + ' guesses left').props),
     ),
             React.createElement(Block, elProps(pathTo('GuessEntry')).layout('horizontal wrapped').props,
-            React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').props).props),
-            React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(Not(IsRoundComplete), Len(YourGuess) > 0)).action(Guess_action).props),
+            React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').readOnly(IsRoundComplete).styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').props).props),
+            React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(RoundInPlay, Len(YourGuess) > 0)).action(Guess_action).props),
     ),
             React.createElement(TextElement, elProps(pathTo('RoundWon')).show(IsRoundWon).content('Correct! ' + Points(false) + ' points added').props),
             React.createElement(TextElement, elProps(pathTo('RoundFailed')).show(IsRoundFailed).content('Sorry - ' + If(UsedAllGuesses, 'no more guesses', () => If(ShownAllLetters, 'all letters shown'))).props),

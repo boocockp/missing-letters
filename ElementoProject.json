@@ -223,11 +223,22 @@
               "kind": "Calculation"
             },
             {
-              "id": "calculation_12",
+              "id": "calculation_23",
               "name": "Is Round Complete",
               "properties": {
                 "calculation": {
                   "expr": "Or(IsRoundWon, IsRoundFailed, RoundSkipped, Not(GameRunning))"
+                },
+                "show": false
+              },
+              "kind": "Calculation"
+            },
+            {
+              "id": "calculation_12",
+              "name": "Round In Play",
+              "properties": {
+                "calculation": {
+                  "expr": "Not(IsRoundComplete)"
                 },
                 "show": false
               },
@@ -582,7 +593,7 @@
                           "expr": "(MaxGuesses - NumberOfGuesses) + ' guesses left'"
                         },
                         "show": {
-                          "expr": "Not(IsRoundComplete)"
+                          "expr": "RoundInPlay"
                         }
                       },
                       "kind": "Text"
@@ -603,6 +614,9 @@
                       "properties": {
                         "styles": {
                           "fontSize": "28"
+                        },
+                        "readOnly": {
+                          "expr": "IsRoundComplete"
                         }
                       },
                       "kind": "TextInput"
@@ -615,7 +629,7 @@
                           "expr": "If(Len(YourGuess) > 0, MakeGuess())"
                         },
                         "enabled": {
-                          "expr": "And(Not(IsRoundComplete), Len(YourGuess) > 0)"
+                          "expr": "And(RoundInPlay, Len(YourGuess) > 0)"
                         }
                       },
                       "kind": "Button"
