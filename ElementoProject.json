@@ -407,7 +407,7 @@
                   "id": "text_3",
                   "name": "Instructions Text",
                   "properties": {
-                    "content": "You have to guess words from which you are given about half the letters.  The letters are in order, but you do not know where they come in the word (unless you ask).\n\n\nEnter your guesses - up to three in the box and click the Guess button.  You can also show more letters, and show the gaps in the word.  \n\n\nBut guess what - guesses, showing letters and showing gaps all reduce the number of points you get for the word, so you need to decide whether to use those or just puzzle it out.\n\n\nClick Next Word after each word to get another one.\n\n\n<b>Tips</b>\n<ul>\n  <li>The words may be plural</li>\n</ul>\n\nYou have 3 minutes to guess as many words as you can.",
+                    "content": "You have to guess words from which you are given about half the letters.  The letters are in order, but you do not know where they come in the word (unless you show gaps).\n\n\nEnter your guesses - up to three - in the box and click the Guess button.  You can also show more letters, and show the gaps in the word, but both of those reduce your points.  \n\n\nClick Next Word after each word to get another one.\n\n\n<b>Tips</b>\n<ul>\n  <li>The words may be plural</li>\n</ul>\n\nYou have 3 minutes to guess as many words as you can.",
                     "allowHtml": true
                   },
                   "kind": "Text"

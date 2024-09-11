@@ -167,13 +167,10 @@ function MainPage(props) {
         React.createElement(Timer, elProps(pathTo('GameTimer')).show(false).props),
         React.createElement(TextElement, elProps(pathTo('Title')).styles(elProps(pathTo('Title.Styles')).fontFamily('Chelsea Market').fontSize('28').color('#039a03').props).content('Mis_ing L_tters').props),
         React.createElement(Dialog, elProps(pathTo('Instructions')).layout('vertical').showCloseButton(true).styles(elProps(pathTo('Instructions.Styles')).padding('2em').props).props,
-            React.createElement(TextElement, elProps(pathTo('InstructionsText')).allowHtml(true).content(`You have to guess words from which you are given about half the letters.  The letters are in order, but you do not know where they come in the word (unless you ask).
+            React.createElement(TextElement, elProps(pathTo('InstructionsText')).allowHtml(true).content(`You have to guess words from which you are given about half the letters.  The letters are in order, but you do not know where they come in the word (unless you show gaps).
 
 
-Enter your guesses - up to three in the box and click the Guess button.  You can also show more letters, and show the gaps in the word.  
-
-
-But guess what - guesses, showing letters and showing gaps all reduce the number of points you get for the word, so you need to decide whether to use those or just puzzle it out.
+Enter your guesses - up to three - in the box and click the Guess button.  You can also show more letters, and show the gaps in the word, but both of those reduce your points.  
 
 
 Click Next Word after each word to get another one.
