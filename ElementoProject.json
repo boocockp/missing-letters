@@ -720,7 +720,7 @@
                           "expr": "IsRoundComplete"
                         },
                         "keyAction": {
-                          "expr": "If(Or($event.key == 'Enter', $event.key = 'Tab'), MakeGuess())"
+                          "expr": "let key = $event.key\nSet(Key, key)\nIf(Or($event.key == 'Enter', $event.key = 'Tab'), MakeGuess())"
                         }
                       },
                       "kind": "TextInput"
@@ -737,6 +737,14 @@
                         }
                       },
                       "kind": "Button"
+                    },
+                    {
+                      "id": "data_15",
+                      "name": "Key",
+                      "properties": {
+                        "display": true
+                      },
+                      "kind": "Data"
                     }
                   ],
                   "kind": "Block"
