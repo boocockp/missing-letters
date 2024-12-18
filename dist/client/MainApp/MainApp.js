@@ -118,7 +118,6 @@ function MainPage(props) {
         Set(LatestGuess, Lowercase(Trim(YourGuess)))
         Set(NumberOfGuesses, NumberOfGuesses + 1)
     }), [LatestGuess, YourGuess, NumberOfGuesses]))
-    const Key = _state.setObject(pathTo('Key'), new Data.State(stateProps(pathTo('Key')).props))
     const WordControls = _state.setObject(pathTo('WordControls'), new Block.State(stateProps(pathTo('WordControls')).props))
     const EndofGamePanel = _state.setObject(pathTo('EndofGamePanel'), new Block.State(stateProps(pathTo('EndofGamePanel')).props))
     const RoundControls = _state.setObject(pathTo('RoundControls'), new Block.State(stateProps(pathTo('RoundControls')).props))
@@ -131,9 +130,8 @@ function MainPage(props) {
     }), [StartNewGame, Instructions])
     const YourGuess_keyAction = React.useCallback(wrapFn(pathTo('YourGuess'), 'keyAction', async ($event) => {
         let key = $event.key
-        Set(Key, key)
         await If(Or($event.key == 'Enter', $event.key == 'Tab'), async () => await MakeGuess())
-    }), [Key, MakeGuess])
+    }), [MakeGuess])
     const Guess_action = React.useCallback(wrapFn(pathTo('Guess'), 'action', async () => {
         await If(Len(YourGuess) > 0, async () => await MakeGuess())
     }), [YourGuess, MakeGuess])
@@ -235,7 +233,6 @@ Or Start Game to dive straight in!`).props),
             React.createElement(Block, elProps(pathTo('GuessEntry')).layout('horizontal wrapped').props,
             React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').readOnly(IsRoundComplete).keyAction(YourGuess_keyAction).styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').width('15em').props).props),
             React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(RoundInPlay, Len(YourGuess) > 0)).action(Guess_action).props),
-            React.createElement(Data, elProps(pathTo('Key')).display(true).props),
     ),
             React.createElement(Block, elProps(pathTo('WordControls')).layout('horizontal wrapped').props,
             React.createElement(Button, elProps(pathTo('ShowAnotherLetter')).content('Show Another Letter').appearance('outline').enabled(Not(IsRoundComplete)).action(ShowAnotherLetter_action).props),
