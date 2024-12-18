@@ -129,7 +129,7 @@ function MainPage(props) {
         await Instructions.Close()
     }), [StartNewGame, Instructions])
     const YourGuess_keyAction = React.useCallback(wrapFn(pathTo('YourGuess'), 'keyAction', async ($event) => {
-        await If($event.key == 'Enter', async () => await MakeGuess())
+        await If(Or($event.key == 'Enter', $event.key == 'Tab'), async () => await MakeGuess())
     }), [MakeGuess])
     const Guess_action = React.useCallback(wrapFn(pathTo('Guess'), 'action', async () => {
         await If(Len(YourGuess) > 0, async () => await MakeGuess())

@@ -720,7 +720,7 @@
                           "expr": "IsRoundComplete"
                         },
                         "keyAction": {
-                          "expr": "If($event.key == 'Enter', MakeGuess())"
+                          "expr": "If(Or($event.key == 'Enter', $event.key = 'Tab'), MakeGuess())"
                         }
                       },
                       "kind": "TextInput"
