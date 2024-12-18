@@ -374,7 +374,7 @@
               "properties": {
                 "action": true,
                 "calculation": {
-                  "expr": "let word = RandomFrom(WordList())\nLog('word', word)\nSet(Word, word)\nlet positions = Range(0, Len(word) - 1)\nSet(PositionsShown, RandomListFrom(positions, Len(word) / 2))\nReset(YourGuess, LatestGuess, NumberOfGuesses, GapsShown)\n"
+                  "expr": "let word = RandomFrom(WordList())\nSet(Word, word)\nlet positions = Range(0, Len(word) - 1)\nSet(PositionsShown, RandomListFrom(positions, Len(word) / 2))\nReset(YourGuess, LatestGuess, NumberOfGuesses, GapsShown)\n"
                 }
               },
               "kind": "Function"
@@ -412,7 +412,6 @@
             {
               "id": "function_25",
               "name": "Finish Round",
-              "notes": "Nothing to do",
               "properties": {
                 "action": true
               },
@@ -719,6 +718,9 @@
                         },
                         "readOnly": {
                           "expr": "IsRoundComplete"
+                        },
+                        "keyAction": {
+                          "expr": "If($event.key == 'Enter', MakeGuess())"
                         }
                       },
                       "kind": "TextInput"

@@ -98,7 +98,6 @@ function MainPage(props) {
     const YourGuess = _state.setObject(pathTo('YourGuess'), new TextInput.State(stateProps(pathTo('YourGuess')).props))
     const SetupNewRound = _state.setObject(pathTo('SetupNewRound'), React.useCallback(wrapFn(pathTo('SetupNewRound'), 'calculation', async () => {
         let word = RandomFrom(await WordList())
-        Log('word', word)
         Set(Word, word)
         let positions = Range(0, Len(word) - 1)
         Set(PositionsShown, RandomListFrom(positions, Len(word) / 2))
@@ -129,6 +128,9 @@ function MainPage(props) {
         await StartNewGame()
         await Instructions.Close()
     }), [StartNewGame, Instructions])
+    const YourGuess_keyAction = React.useCallback(wrapFn(pathTo('YourGuess'), 'keyAction', async ($event) => {
+        await If($event.key == 'Enter', async () => await MakeGuess())
+    }), [MakeGuess])
     const Guess_action = React.useCallback(wrapFn(pathTo('Guess'), 'action', async () => {
         await If(Len(YourGuess) > 0, async () => await MakeGuess())
     }), [YourGuess, MakeGuess])
@@ -228,7 +230,7 @@ Or Start Game to dive straight in!`).props),
             React.createElement(TextElement, elProps(pathTo('PointsAvailable')).content(If(IsRoundComplete, ' ', () => Points(true) + ' points')).props),
     ),
             React.createElement(Block, elProps(pathTo('GuessEntry')).layout('horizontal wrapped').props,
-            React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').readOnly(IsRoundComplete).styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').width('15em').props).props),
+            React.createElement(TextInput, elProps(pathTo('YourGuess')).label('Your Guess').readOnly(IsRoundComplete).keyAction(YourGuess_keyAction).styles(elProps(pathTo('YourGuess.Styles')).fontSize('28').width('15em').props).props),
             React.createElement(Button, elProps(pathTo('Guess')).content('Guess').appearance('outline').enabled(And(RoundInPlay, Len(YourGuess) > 0)).action(Guess_action).props),
     ),
             React.createElement(Block, elProps(pathTo('WordControls')).layout('horizontal wrapped').props,
